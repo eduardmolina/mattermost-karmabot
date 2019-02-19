@@ -1,0 +1,20 @@
+version: '3.7'
+services:
+
+    mattermost_karmabot_mongodb:
+        container_name: "mattermost_karmabot"
+        image: mongo:latest
+        network_mode: host
+        volumes:
+            - mattermost_karmabot_data:/data/db
+        ports:
+            - "27017:2017"
+
+    karmabot:
+        build:
+            context: ../
+            dockerfile: docker/Dockerfile
+        network_mode: host
+
+volumes:
+    mattermost_karmabot_data:
