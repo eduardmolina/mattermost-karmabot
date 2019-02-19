@@ -156,7 +156,7 @@ class KarmaBot(object):
             sleep(0.001)  # CPU save ;D
 
     def wake_up(self):
-        connect('karmadb')
+        connect(host='localhost', db='karmadb')
         self.update_targets()
 
         wss_status = self._establish_ws_handshake()

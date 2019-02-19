@@ -1,0 +1,93 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: server
+  namespace: mattermost-karmabot
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+      - image: <config_here>
+        imagePullPolicy: Always
+        name: server
+        env:
+        - name: CONFIG_FILE
+          value: /run/config/config
+        resources:
+          requests:
+            cpu: "30m"
+            memory: "300Mi"
+        ports:
+        - containerPort: 3134
+        volumeMounts:
+        - name: config
+          mountPath: "/run/config"
+          readOnly: true
+      volumes:
+      - name: config
+        secret:
+          secretName: mattermost-karmabot-config
+      imagePullSecrets:
+        - name: <config_here>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: mattermost-karmabot
+  labels:
+    app: mongodb
+spec:
+  ports:
+  - port: 27017
+  selector:
+    app: mongodb
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mattermost-karmabot-disk
+  namespace: mattermost-karmabot
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: gcepd
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mattermost-karmabot-mongodb
+  namespace: mattermost-karmabot
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongodb
+      annotations:
+        backup-command: mongodump -d mattermost-karmabot --archive
+    spec:
+      containers:
+      - image: mongo:4.0.3
+        imagePullPolicy: IfNotPresent
+        name: mongodb
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "200M"
+        volumeMounts:
+        - name: mattermost-karmabot-db
+          mountPath: /data/db
+        ports:
+        - containerPort: 27017
+      volumes:
+      - name: mattermost-karmabot-db
+        persistentVolumeClaim:
+          claimName: mattermost-karmabot-disk
