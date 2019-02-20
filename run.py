@@ -1,8 +1,16 @@
+import os
+
 from src import KarmaBot
+from utils import json_to_dict
+
 
 if __name__ == '__main__':
+
+    config = json_to_dict(
+        os.getenv('CONFIG_PATH', 'config/karmaconf.json'))
+
     karma_bot = KarmaBot(
-        'mm_access_token',
-        'mm_wss_url',
-        'mm_incoming_wb')
+        config['MM_ACCESS_TOKEN'],
+        config['MM_WEBSOCKET_URL'],
+        config['MM_INCOMING_WB_URL'])
     karma_bot.wake_up()
