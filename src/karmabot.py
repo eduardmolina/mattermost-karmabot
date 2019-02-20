@@ -112,7 +112,7 @@ class KarmaBot(object):
         payload = {
             'channel': channel,
             'icon_url': 'https://www.mattermost.org/wp-content/uploads/2016/04/icon.png',
-            'text': "#### | {}'s Karmascore: {} | {}".format(
+            'text': "{}'s Karmascore: {} | {}".format(
                 target, score, ':+1:' if score >= 0 else ':-1:')
         }
 
