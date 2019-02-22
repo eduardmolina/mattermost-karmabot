@@ -13,11 +13,12 @@ from .models import Target
 
 
 class KarmaBot(object):
-    def __init__(self, mm_token, mm_wss_url, mm_incoming_wb):
-        self.karma_pattern_re = r'@(\S*)([\+|\-]{2,}).*'
+    def __init__(self, mm_token, mm_wss_url, mm_incoming_wb, db_config):
+        self.karma_pattern_re = r'^@(\S*)([\+|\-]{2,}).*'
         self.mm_incoming_wb = mm_incoming_wb
         self.mm_token = mm_token
         self.mm_wss_url = mm_wss_url
+        self.db_config = db_config
         self.tasks = Queue()
         self.wss = None
         self.registered_targets = []
@@ -120,7 +121,7 @@ class KarmaBot(object):
         return {
             'channel': channel,
             'icon_url': 'https://www.mattermost.org/wp-content/uploads/2016/04/icon.png',
-            'text': f"**@{target}'s** Karmascore: {score} | {emoji}"
+            'text': f"** @{target}'s** Karmascore: {score} | {emoji}"
         }
 
     def send_score(self, payload):
@@ -153,8 +154,8 @@ class KarmaBot(object):
 
             sleep(0.001)  # CPU save ;D
 
-    def wake_up(self, db_config):
-        connect(**db_config)
+    def wake_up(self):
+        connect(**self.db_config)
         self.update_targets()
 
         wss_status = self._establish_ws_handshake()

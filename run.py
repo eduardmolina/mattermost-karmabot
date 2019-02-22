@@ -9,9 +9,11 @@ if __name__ == '__main__':
         os.getenv('CONFIG_PATH', 'config/karmaconf.json'))
 
     mattermost_config = config['MATTERMOST']
+    db_config = config['MONGO']
     karma_bot = KarmaBot(
         mattermost_config['MM_ACCESS_TOKEN'],
         mattermost_config['MM_WEBSOCKET_URL'],
-        mattermost_config['MM_INCOMING_WB_URL'])
-    db_config = config['MONGO']
-    karma_bot.wake_up(db_config)
+        mattermost_config['MM_INCOMING_WB_URL'],
+        db_config,
+    )
+    karma_bot.wake_up()
