@@ -117,7 +117,8 @@ class KarmaBot(object):
 
     @staticmethod
     def build_payload(channel, score, target):
-        emoji = ':+1:' if score >= 0 else ':-1:'
+        emoji = (':ok_hand:' if score == 0 else (
+            ':+1:' if score > 0 else ':-1:'))
         return {
             'channel': channel,
             'icon_url': 'https://www.mattermost.org/wp-content/uploads/2016/04/icon.png',
