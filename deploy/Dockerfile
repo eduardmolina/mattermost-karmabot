@@ -17,6 +17,8 @@ RUN apk add --no-cache --virtual build-dependencies \
 
 COPY src /src
 COPY config /config
+COPY utils /utils
 COPY run.py /run.py
+COPY healthcheck.py /healthcheck.py
 
 CMD python3 /run.py

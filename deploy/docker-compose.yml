@@ -13,7 +13,7 @@ services:
     karmabot:
         build:
             context: ../
-            dockerfile: docker/Dockerfile
+            dockerfile: deploy/Dockerfile
         network_mode: host
 
 volumes:

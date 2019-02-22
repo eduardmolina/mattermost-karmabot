@@ -15,14 +15,19 @@ spec:
         imagePullPolicy: Always
         name: server
         env:
-        - name: CONFIG_FILE
+        - name: CONFIG_PATH
           value: /run/config/config
+        livenessProbe:
+          exec:
+            command:
+            - python3
+            - /healthcheck.py
+          initialDelaySeconds: 5
+          periodSeconds: 5
         resources:
-          requests:
+          limits:
             cpu: "30m"
             memory: "300Mi"
-        ports:
-        - containerPort: 3134
         volumeMounts:
         - name: config
           mountPath: "/run/config"
@@ -47,19 +52,6 @@ spec:
   selector:
     app: mongodb
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mattermost-karmabot-disk
-  namespace: mattermost-karmabot
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 2Gi
-  storageClassName: gcepd
----
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -75,7 +67,7 @@ spec:
         backup-command: mongodump -d mattermost-karmabot --archive
     spec:
       containers:
-      - image: mongo:4.0.3
+      - image: mongo:4.0.6
         imagePullPolicy: IfNotPresent
         name: mongodb
         resources:
