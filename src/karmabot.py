@@ -14,7 +14,7 @@ from .models import Target
 
 class KarmaBot(object):
     def __init__(self, mm_token, mm_wss_url, mm_incoming_wb, db_config):
-        self.karma_pattern_re = r'^@(\S*)([\+|\-]{2,}).*'
+        self.karma_pattern_re = r'@(\S*)([\+|\-]{2,}).*'
         self.mm_incoming_wb = mm_incoming_wb
         self.mm_token = mm_token
         self.mm_wss_url = mm_wss_url
