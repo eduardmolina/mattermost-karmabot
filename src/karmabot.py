@@ -122,7 +122,7 @@ class KarmaBot(object):
         return {
             'channel': channel,
             'icon_url': 'https://www.mattermost.org/wp-content/uploads/2016/04/icon.png',
-            'text': f"** @{target}'s** Karmascore: {score} | {emoji}"
+            'text': f"** {target}'s** Karmascore: {score} | {emoji}"
         }
 
     def send_score(self, payload):
