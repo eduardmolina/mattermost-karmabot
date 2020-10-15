@@ -5,7 +5,7 @@ from src.karmabot import KarmaBot
 
 class TestKarmaBot():
     def setUp(self):
-        self.bot = KarmaBot(MagicMock(), MagicMock(), MagicMock())
+        self.bot = KarmaBot(MagicMock(), MagicMock(), MagicMock(), MagicMock())
 
     def test_parse_message(self):
         response = self.bot._parse_message('@cachorro_quente++')

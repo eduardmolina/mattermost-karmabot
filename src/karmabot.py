@@ -1,6 +1,7 @@
 import json
 import logging
 import re
+
 import requests
 
 from mongoengine import connect
@@ -23,28 +24,12 @@ class KarmaBot(object):
         self.wss = None
         self.registered_targets = []
 
-    def get_header(self):
-        return {
-            'Connection': 'Upgrade',
-            'Cookie': f'MMAUTHTOKEN={self.mm_token}',
-            'User-Agent': (
-                'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 '
-                '(KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'
-            ),
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Sec-WebSocket-Version': '13',
-            'Accept-Language': 'en-US,en;q=0.9,pt-BR;q=0.8,pt;q=0.7',
-            'Sec-WebSocket-Extensions': (
-                'permessage-deflate; client_max_window_bits'),
-            'Upgrade': 'websocket',
-            'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache'
-        }
-
+    def get_auth_cookie(self):
+        return f'MMAUTHTOKEN={self.mm_token}'
 
     def _establish_ws_handshake(self):
-        header = self.get_header()
-        self.wss = create_connection(self.mm_wss_url, header=header)
+        auth_cookie = self.get_auth_cookie()
+        self.wss = create_connection(self.mm_wss_url, cookie=auth_cookie)
 
         return self.wss.getstatus()
 
